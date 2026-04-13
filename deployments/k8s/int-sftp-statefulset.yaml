@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: int-sftp }
+spec:
+  serviceName: int-sftp
+  replicas: 1
+  selector: { matchLabels: { app: int-sftp } }
+  template:
+    metadata: { labels: { app: int-sftp } }
+    spec:
+      containers:
+        - name: int-sftp
+          image: your-registry/int-sftp:latest
+          ports: [{containerPort: 2223}]
+          volumeMounts: [{name: file-data, mountPath: /data}]
+  volumeClaimTemplates:
+    - metadata: { name: file-data }
+      spec:
+        accessModes: ["ReadWriteMany"]
+        resources: { requests: { storage: 500Gi } }
