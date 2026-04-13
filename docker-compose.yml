@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: sftp
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+  api:
+    build: { context: ., dockerfile: cmd/api/Dockerfile }
+    depends_on: [postgres]
+    ports: ["8080:8080"]
+    volumes: ["file-data:/data", "./configs:/app/configs"]
+
+  ext-sftp:
+    build: { context: ., dockerfile: cmd/ext-sftp/Dockerfile }
+    depends_on: [postgres]
+    ports: ["2222:2222"]
+    volumes: ["file-data:/data", "./configs:/app/configs"]
+
+  int-sftp:
+    build: { context: ., dockerfile: cmd/int-sftp/Dockerfile }
+    depends_on: [postgres]
+    ports: ["2223:2223"]
+    volumes: ["file-data:/data", "./configs:/app/configs"]
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports: ["9090:9090"]
+
+  web:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    volumes: ["./web:/app"]
+    ports: ["5173:5173"]
+
+volumes:
+  pgdata:
+  file-data:

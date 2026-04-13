@@ -1,0 +1,32 @@
+app:
+  name: sftp-platform
+  env: dev
+  log_level: info
+
+db:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: postgres
+  name: sftp
+  max_conns: 10
+
+api:
+  host: 0.0.0.0
+  port: 8080
+  jwt_private_key_path: /run/secrets/jwt_private.pem
+  jwt_public_key_path: /run/secrets/jwt_public.pem
+
+sftp:
+  external_address: 0.0.0.0:2222
+  internal_address: 0.0.0.0:2223
+  host_key_path: /run/secrets/sftp_host_key
+  data_root: /data
+
+sync:
+  interval_seconds: 60
+  workers: 5
+  checksum_enabled: true
+
+prometheus:
+  address: 0.0.0.0:9090
