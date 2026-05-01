@@ -1,0 +1,4 @@
+web/node_modules/
+configs/*.pem
+configs/sftp_host_key
+configs/sftp_host_key.pub
