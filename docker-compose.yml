@@ -12,18 +12,33 @@ services:
   api:
     build: { context: ., dockerfile: cmd/api/Dockerfile }
     depends_on: [postgres]
+    environment:
+      SFTP_DB_HOST: postgres
+      SFTP_API_JWT_PRIVATE_KEY_PATH: /app/configs/jwt_private.pem
+      SFTP_API_JWT_PUBLIC_KEY_PATH: /app/configs/jwt_public.pem
+      SFTP_SFTP_HOST_KEY_PATH: /app/configs/sftp_host_key
     ports: ["8080:8080"]
     volumes: ["file-data:/data", "./configs:/app/configs"]
 
   ext-sftp:
     build: { context: ., dockerfile: cmd/ext-sftp/Dockerfile }
     depends_on: [postgres]
+    environment:
+      SFTP_DB_HOST: postgres
+      SFTP_API_JWT_PRIVATE_KEY_PATH: /app/configs/jwt_private.pem
+      SFTP_API_JWT_PUBLIC_KEY_PATH: /app/configs/jwt_public.pem
+      SFTP_SFTP_HOST_KEY_PATH: /app/configs/sftp_host_key
     ports: ["2222:2222"]
     volumes: ["file-data:/data", "./configs:/app/configs"]
 
   int-sftp:
     build: { context: ., dockerfile: cmd/int-sftp/Dockerfile }
     depends_on: [postgres]
+    environment:
+      SFTP_DB_HOST: postgres
+      SFTP_API_JWT_PRIVATE_KEY_PATH: /app/configs/jwt_private.pem
+      SFTP_API_JWT_PUBLIC_KEY_PATH: /app/configs/jwt_public.pem
+      SFTP_SFTP_HOST_KEY_PATH: /app/configs/sftp_host_key
     ports: ["2223:2223"]
     volumes: ["file-data:/data", "./configs:/app/configs"]
 
