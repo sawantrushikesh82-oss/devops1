@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: ext-sftp }
+spec:
+  serviceName: ext-sftp
+  replicas: 1
+  selector: { matchLabels: { app: ext-sftp } }
+  template:
+    metadata: { labels: { app: ext-sftp } }
+    spec:
+      containers:
+        - name: ext-sftp
+          image: your-registry/ext-sftp:latest
+          ports: [{containerPort: 2222}]
+          volumeMounts: [{name: file-data, mountPath: /data}]
+  volumeClaimTemplates:
+    - metadata: { name: file-data }
+      spec:
+        accessModes: ["ReadWriteMany"]
+        resources: { requests: { storage: 500Gi } }

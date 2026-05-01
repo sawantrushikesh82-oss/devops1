@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: sftp-api }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: sftp-api } }
+  template:
+    metadata: { labels: { app: sftp-api } }
+    spec:
+      containers:
+        - name: api
+          image: your-registry/sftp-api:latest
+          ports: [{containerPort: 8080}]
+          volumeMounts: [{name: data, mountPath: /data}]
+      volumes:
+        - name: data
+          persistentVolumeClaim: { claimName: sftp-rwx }
